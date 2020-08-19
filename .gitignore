@@ -1,0 +1,8 @@
+.idea
+*.sqlite
+/venv
+/develop_db*
+/ssl
+*.pyc
+/tmp
+/bauantraege

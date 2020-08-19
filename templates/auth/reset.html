@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block further_stylesheets %}
+    <link rel=stylesheet type=text/css href="{{ url_for('main.static', filename='css/signin.css') }}">
+{% endblock %}
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+{% block page_content %}
+    <div style="width:100%; max-width: 330px; padding: 15px; margin: auto">
+       <form class="form-signin text-center" role="form" method="post">
+           {{ form.hidden_tag() }}
+           <h1 class="h3 mb-3"> Bitte geben Sie ihre Email zum Zurücksetzen ihres Passwortes an</h1>
+           {{ form.email(class="form-control") }}
+
+           {{ form.submit(class="btn btn-lg btn-primary btn-block bg-brand", value="Passwort zurücksetzen") }}
+       </form>
+    </div>
+{% endblock %}

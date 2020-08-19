@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block additional_scripts %}
+
+{% endblock %}
+{% block page_content %}
+
+     <p>
+     <input type="submit" value="Bauantrag importieren"  id="xbau_uploader"  class="btn btn-default" />
+     <script type="text/javascript" src="{{ url_for('main.static', filename='3rdparty/plupload-2.3.6/js/plupload.full.min.js') }}"></script>
+     <script type="text/javascript" src="{{ url_for('main.static', filename='js/antragsteller/upload.js') }}"></script>
+     </p>
+
+     <div class="table-responsive">
+          <table class="table table-striped">
+               <tr>
+                    <th>ID</th>
+                    <th>Typ</th>
+                    <th>Bezeichnung</th>
+                    <th>Status</th>
+                    <th class="text-right">Aktionen</th>
+               </tr>
+               {% for ba in bauantraege %}
+               <tr>
+                    <td>{{ba.id}}</td>
+                    <td>{{ba.nachrichtentyp}}</td>
+                    <td>{{ba.bezeichnung}}</td>
+                    <td>{{ba.status}}</td>
+                    <td class="text-right">
+                       <button class="btn btn-sm btn-info" onclick="bauantrag_open(this)">
+                            <span class="glyphicon glyphicon-folder-open"></span>
+                       </button>
+                         {% if ba.status == 'erstellt' %}
+                       <button class="btn btn-sm btn-danger" onclick="bauantrag_delete(this)">
+                            <span class="glyphicon glyphicon-trash"></span>
+                       </button>
+                         {% endif %}
+                    </td>
+               </tr>
+               {% endfor %}
+          </table>
+     </div>
+
+
+{% endblock %}
+
+{% block onready_scripts %}
+     <script type="text/javascript" src="{{ url_for('main.static', filename='js/common/bauantrag.js') }}"></script>
+{% endblock %}
+

@@ -1,0 +1,39 @@
+body {
+  padding-top: 50px;
+}
+.content {
+  padding: 40px 15px;
+}
+
+.navbar-brand img {
+    margin-top: -10px !important;
+    height: 40px;
+
+}
+.navbar {
+    /*background-color: rgb(166, 104, 41) !important;*/
+    background-color: #17365c !important;
+}
+
+.small-input{
+    width: 50px !important;
+}
+
+.semismall-input{
+    width: 100px !important;
+}
+
+.input-area{
+    padding: 10px;
+    background: lightgray;
+    border-radius: 5px;
+}
+
+
+.th-link, .th-link:hover{
+    color: black;
+}
+
+.bg-brand{
+    background-color: #17365c !important;
+}

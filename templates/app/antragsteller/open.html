@@ -1,0 +1,497 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+
+     <p>
+        Seite zur Ansicht der Details des Bauantrages mit der ID={{bauantrag.id}}
+     </p>
+
+
+{% set bauvorhaben = ba_details.bauvorhaben %}
+
+     <div>
+
+    <div class="panel-group"  aria-multiselectable="true">
+  <div class="panel panel-default" >
+    <div class="panel-heading" id="headingBauvorhaben">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" href="#collapseBauvorhaben">
+          Bauvorhaben
+        </a>
+      </h4>
+    </div>
+    <div id="collapseBauvorhaben" class="collapse in" role="tabpanel" aria-labelledby="headingBauvorhaben">
+      <div class="panel-body">
+          <form>
+              <div class="form-group row">
+                <label for="Bezeichnung" class="col-sm-2 col-form-label">Bezeichnung</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="Bezeichnung" placeholder="" value="{{bauvorhaben.bezeichnungDesBauvorhabens}}" readonly>
+                </div>
+              </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading"  id="headingBeteiligte">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" href="#collapseBeteiligte">
+          Beteiligte
+        </a>
+      </h4>
+    </div>
+    <div id="collapseBeteiligte" class="collapse in" aria-labelledby="headingBeteiligte">
+      <div class="panel-body">
+       <h4>Bauherren</h4>
+           <form>
+               {%for bauherr in bauvorhaben.beteiligte.bauherr%}
+              <div class="form-group row">
+                <label for="bauherr{{loop.index}}" class="col-sm-2 col-form-label">Bauherr #{{loop.index}}</label>
+                <div class="col-sm-10">
+                    {% if bauherr.natuerlichePerson
+                       and bauherr.natuerlichePerson.name
+                       and bauherr.natuerlichePerson.name.familienname
+                       and bauherr.natuerlichePerson.name.familienname.name
+                       and bauherr.natuerlichePerson.name.vorname
+                       and bauherr.natuerlichePerson.name.vorname.name%}
+                         {% set name=bauherr.natuerlichePerson.name %}
+                         {% set value=name.familienname.name+', '+name.vorname.name %}
+                    {% endif %}
+                  <input type="text" class="form-control" id="bauherr{{loop.index}}" placeholder="" value="{{value}}" readonly>
+                </div>
+              </div>
+               {% endfor %}
+               {% if bauvorhaben.beteiligte.bevollmaechtigter %}
+               {% set bevollmaechtigter=bauvorhaben.beteiligte.bevollmaechtigter%}
+               <div class="form-group row">
+                <label for="bevollmaechtigter" class="col-sm-2 col-form-label">Bevollmächtigter</label>
+                <div class="col-sm-10">
+                    {% if bevollmaechtigter.name
+                       and bevollmaechtigter.name.familienname
+                       and bevollmaechtigter.name.familienname.name
+                       and bevollmaechtigter.name.vorname
+                       and bevollmaechtigter.name.vorname.name%}
+                         {% set name=bevollmaechtigter.name %}
+                         {% set value=name.familienname.name+', '+name.vorname.name %}
+                    {% endif %}
+                  <input type="text" class="form-control" id="bevollmaechtigter" placeholder="" value="{{value}}" readonly>
+                </div>
+              </div>
+               {% endif %}
+               <div class="form-group row">
+                    {% if bauvorhaben.beteiligte.grundstueckseigentuemer
+                   and bauvorhaben.beteiligte.grundstueckseigentuemer.natuerlichePerson %}
+                        {% set grundstueckseigentuemer = bauvorhaben.beteiligte.grundstueckseigentuemer.natuerlichePerson%}
+                    {% endif %}
+                <label for="grundstueckseigentuemer" class="col-sm-2 col-form-label">Grundstückseigentümer</label>
+                   {% if grundstueckseigentuemer
+                   and grundstueckseigentuemer.name
+                   and grundstueckseigentuemer.name.familienname
+                   and grundstueckseigentuemer.name.familienname.name
+                   and grundstueckseigentuemer.name.vorname
+                   and grundstueckseigentuemer.name.vorname.name%}
+                        {% set value = grundstueckseigentuemer.name.familienname.name+', '+grundstueckseigentuemer.name.vorname.name %}
+                   {% endif %}
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="grundstueckseigentuemer" placeholder="" value="{{value}}" readonly>
+                </div>
+              </div>
+               {% if bauvorhaben.beteiligte.entwurfsverfasser
+                 and bauvorhaben.beteiligte.entwurfsverfasser.personendaten %}
+               {% set entwurfsverfasser = bauvorhaben.beteiligte.entwurfsverfasser.personendaten%}
+               {% endif %}
+               <div class="form-group row">
+                   {% if entwurfsverfasser
+                   and entwurfsverfasser.name
+                   and entwurfsverfasser.name.familienname
+                   and entwurfsverfasser.name.familienname.name
+                   and entwurfsverfasser.name.vorname
+                   and entwurfsverfasser.name.vorname.name%}
+                   {% set value = entwurfsverfasser.name.familienname.name+', '+entwurfsverfasser.name.vorname.name %}
+                   {% endif %}
+                    <label for="entwurfsverfasser" class="col-sm-2 col-form-label">Entwurfsverfasser</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="entwurfsverfasser" placeholder="" value="{{value}}" readonly>
+                    </div>
+                <div class="col-sm-3">
+                    {% if entwurfsverfasser and entwurfsverfasser.bauvorlageberechtigung %}
+                    {% set checked="" %}
+                    {% endif %}
+                      <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="bauvorlageberechtigungCheck" disabled>
+                      <label class="form-check-label" for="bauvorlageberechtigungCheck">
+                        Bauvorlageberechtigung?
+                      </label>
+                    </div>
+                </div>
+
+              </div>
+
+          </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingGegenstand">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseGegenstand">
+            Gegenstand
+        </a>
+      </h4>
+    </div>
+    <div id="collapseGegenstand" class="collapse in" aria-labelledby="headingGegenstand">
+      <div class="panel-body">
+          <form>
+              {% set artDerMassnahme = bauvorhaben.gegenstand.artDerMassnahme %}
+              <div class="form-group row">
+                <label for="artDerMassnahme" class="col-sm-2 col-form-label">Art der Maßname</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="artDerMassnahme" placeholder="" value="{{artDerMassnahme.name}} ({{artDerMassnahme.code}})" readonly>
+                </div>
+              </div>
+              <h4>Art der baulichen Anlage</h4>
+              <div class="well">
+                  {% set artDerAnlage = bauvorhaben.gegenstand.artDerBaulichenAnlage %}
+                  {% if artDerAnlage and artDerAnlage.artDesGebaeudes%}
+                     {% set value = artDerAnlage.artDesGebaeudes.name+(artDerAnlage.artDesGebaeudes.code) %}
+                  {% else %}
+                     {% set value = None %}
+                  {% endif %}
+                  <div class="form-group row">
+                    <label for="artDesGebaeudes" class="col-sm-2 col-form-label">Art des Gebäudes</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="artDesGebaeudes" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  {% if artDerAnlage and artDerAnlage.artDerSonstigenAnlage%}
+                     {% set value = artDerAnlage.artDerSonstigenAnlage.name+(artDerAnlage.artDerSonstigenAnlage.code) %}
+                  {% else %}
+                     {% set value = None %}
+                  {% endif %}
+                  <div class="form-group row">
+                    <label for="artDerSonstigenAnlage" class="col-sm-2 col-form-label">Art der sonstigen Anlage</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="artDerSonstigenAnlage" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="artDerBaulichenAnlage" class="col-sm-2 col-form-label">Art nicht aufgeführt</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="artDerBaulichenAnlage" placeholder="" value="{{artDerAnlage.artNichtAufgefuehrt}}" readonly>
+                    </div>
+                  </div>
+
+
+              </div>
+
+          </form>
+         </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" id="headingDatenblatt">
+      <h4 class="panel-title"><a class="collapsed" role="button"data-toggle="collapse" href="#collapseDatenblatt">Datenblatt</a></h4>
+    </div>
+    <div id="collapseDatenblatt" class="collapse in"  aria-labelledby="headingDatenblatt">
+      <div class="panel-body">
+
+          {% set datenblatt = bauvorhaben.gegenstand.bauvorhabenDatenblatt %}
+          {% set nutzungsmass = bauvorhaben.gegenstand.bauvorhabenDatenblatt.baulicheNutzungMass[0] %}
+
+
+          <form action="/antragsteller/bauantrag/einreichen/{{bauantrag.id}}">
+
+              <h4>Klassifikation</h4>
+              <div class="well">
+                  {% if datenblatt and datenblatt.bauordnungsrechtlicheKlassifikation %}
+                     {% set klassifikation = datenblatt.bauordnungsrechtlicheKlassifikation %}
+                  {% endif %}
+                  <div class="form-group row">
+                      {% if klassifikation and klassifikation.gebaeudeklasse %}
+                         {% set value = klassifikation.gebaeudeklasse.name+"("+klassifikation.gebaeudeklasse.code+")" %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="gebaeudeklasse" class="col-sm-2 col-form-label">Klassifikation</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="gebaeudeklasse" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if klassifikation and klassifikation.sonderbau %}
+                         {% set value = klassifikation.sonderbau %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="sonderbau" class="col-sm-2 col-form-label">Sonderbau</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="sonderbau" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if klassifikation and klassifikation.garage %}
+                         {% set value = klassifikation.garage.name+"("+klassifikation.garage.code+")" %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="garage" class="col-sm-2 col-form-label">Garage</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="garage" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="hoeheDerBaulichenAnlage" class="col-sm-2 col-form-label">Höhe (m)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="hoeheDerBaulichenAnlage" placeholder="" value="{{nutzungsmass.hoeheDerBaulichenAnlage}}" readonly>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="anzahlVollgeschosse" class="col-sm-2 col-form-label">Anzahl der Vollgeschosse</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="anzahlVollgeschosse" placeholder="" value="{{nutzungsmass.anzahlVollgeschosse}}" readonly>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="grundflaechenDerBaulichenAnlage" class="col-sm-2 col-form-label">Grundfläche (m<sup>2</sup>)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="grundflaechenDerBaulichenAnlage" placeholder="" value="{{nutzungsmass.grundflaechenDerBaulichenAnlage}}" readonly>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="geschossflaeche" class="col-sm-2 col-form-label">Geschossfläche (m<sup>2</sup>)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="geschossflaeche" placeholder="" value="{{nutzungsmass.geschossflaeche}}" readonly>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="baumasse" class="col-sm-2 col-form-label">Baumasse (m<sup>3</sup>)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="baumasse" placeholder="" value="{{bauvorhaben.gegenstand.bauvorhabenDatenblatt.baulicheNutzungMass[0].baumasse}}" readonly>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="verkaufsflaeche" class="col-sm-2 col-form-label">Verkaufsfläche (m<sup>2</sup>)</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="verkaufsflaeche" placeholder="" value="{{bauvorhaben.gegenstand.bauvorhabenDatenblatt.baulicheNutzungMass[0].verkaufsflaeche}}" readonly>
+                </div>
+              </div>
+              <h4>Grundstücksflächen</h4>
+              <div class="well">
+                  {% set flaechen = nutzungsmass.grundstuecksflaechen %}
+
+                  <div class="form-group row">
+                    <label for="bebauteGrundstuecksflaeche" class="col-sm-2 col-form-label">bebaut (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="bebauteGrundstuecksflaeche" placeholder="" value="{{flaechen.bebauteGrundstuecksflaeche}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="nichtBebauteGrundstuecksflaeche" class="col-sm-2 col-form-label">nicht bebaut (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="nichtBebauteGrundstuecksflaeche" placeholder="" value="{{flaechen.nichtBebauteGrundstuecksflaeche}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="versiegelteFlaeche" class="col-sm-2 col-form-label">versiegelt (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="versiegelteFlaeche" placeholder="" value="{{flaechen.versiegelteFlaeche}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="spielUndFreizeitflaeche" class="col-sm-2 col-form-label">Spiel und Freizeit (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="spielUndFreizeitflaeche" placeholder="" value="{{flaechen.spielUndFreizeitflaeche}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="flaecheDerNebenanlagen" class="col-sm-2 col-form-label">Nebenanlagen (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="flaecheDerNebenanlagen" placeholder="" value="{{flaechen.flaecheDerNebenanlagen}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="flaecheDerGemeinschaftsanlagen" class="col-sm-2 col-form-label">Gemeinschaft (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="flaecheDerGemeinschaftsanlagen" placeholder="" value="{{flaechen.flaecheDerGemeinschaftsanlagen}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="stellplaetzeUndDerenZufahrten" class="col-sm-2 col-form-label">Stellplätze mit Zufahrten (m<sup>2</sup>)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="stellplaetzeUndDerenZufahrten" placeholder="" value="{{flaechen.stellplaetzeUndDerenZufahrten}}" readonly>
+                    </div>
+                  </div>
+
+              </div>
+              <h4>Städtebauliche Kennzahlen</h4>
+              <div class="well">
+                  {% set staedtebaulicheKennzahlen = nutzungsmass.staedtebaulicheKennzahlen[0] %}
+                  <div class="form-group row">
+                      {% if staedtebaulicheKennzahlen and staedtebaulicheKennzahlen.geschossflaechenzahl %}
+                         {% set value = staedtebaulicheKennzahlen.geschossflaechenzahl %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="geschossflaechenzahl" class="col-sm-2 col-form-label">Geschossflächenzahl (GFZ)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="geschossflaechenzahl" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if staedtebaulicheKennzahlen and staedtebaulicheKennzahlen.grundflaechenzahl %}
+                         {% set value = staedtebaulicheKennzahlen.grundflaechenzahl %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="grundflaechenzahl" class="col-sm-2 col-form-label">Grundflächenzahl (GRZ)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="grundflaechenzahl" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if staedtebaulicheKennzahlen and staedtebaulicheKennzahlen.baumassenzahl %}
+                         {% set value = staedtebaulicheKennzahlen.baumassenzahl %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="baumassenzahl" class="col-sm-2 col-form-label">Baumassenzahl (BMZ)</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="baumassenzahl" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+              </div>
+
+               <h4>Kennzahlen</h4>
+              <div class="well">
+                 {% set kennzahlen = nutzungsmass.kennzahlen[0] %}
+                  <div class="form-group row">
+                      {% if kennzahlen and kennzahlen.erforderlicheStellplaetze %}
+                         {% set value = kennzahlen.erforderlicheStellplaetze %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="erforderlicheStellplaetze" class="col-sm-2 col-form-label">Erforderliche Stellplätze</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="erforderlicheStellplaetze" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if kennzahlen and kennzahlen.geplanteStellplaetze %}
+                         {% set value = kennzahlen.geplanteStellplaetze %}
+                      {% else %}
+                         {% set value = None %}
+                      {% endif %}
+                    <label for="geplanteStellplaetze" class="col-sm-2 col-form-label">Geplante Stellplätze</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="geplanteStellplaetze" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+              </div>
+
+              <h4>Nutzungseinheiten</h4>
+              <div class="well">
+                  {% set nutzungseinheiten = nutzungsmass.nutzungseinheiten %}
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.wohneinheitenGesamt %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="wohneinheitenGesamt" class="col-sm-2 col-form-label">Wohneinheiten Gesamt</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="wohneinheitenGesamt" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.wohneinheitenEigentumswohnungen %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="wohneinheitenEigentumswohnungen" class="col-sm-2 col-form-label">Wohneinheiten Eigentumswohnungen</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="wohneinheitenEigentumswohnungen" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.wohneinheitenMietwohnungen %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="wohneinheitenMietwohnungen" class="col-sm-2 col-form-label">Wohneinheiten Mietwohnungen</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="wohneinheitenMietwohnungen" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.wohneinheitenSozialwohnungen %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="wohneinheitenSozialwohnungen" class="col-sm-2 col-form-label">Wohneinheiten Sozialwohnungen</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="wohneinheitenSozialwohnungen" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.wohnungenGewerblich %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="wohnungenGewerblich" class="col-sm-2 col-form-label">Wohnungen gewerblich</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="wohnungenGewerblich" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.wohnungenFreiberuflich %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="wohnungenFreiberuflich" class="col-sm-2 col-form-label">Wohnungen freiberuflich</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="wohnungenFreiberuflich" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      {% if nutzungseinheiten %}
+                          {% set value = nutzungseinheiten.nutzungseinheitenGewerbe %}
+                      {% else %}
+                          {% set value = None %}
+                      {% endif %}
+                    <label for="nutzungseinheitenGewerbe" class="col-sm-2 col-form-label">Nutzungseinheiten Gewerbe</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="nutzungseinheitenGewerbe" placeholder="" value="{{value}}" readonly>
+                    </div>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  {% set bauweise = bauvorhaben.gegenstand.bauvorhabenDatenblatt.bauweise %}
+                <label for="bauweise" class="col-sm-2 col-form-label">Bauweise</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="bauweise" placeholder="" value="{{bauweise.name}} ({{bauweise.code}})" readonly>
+                </div>
+              </div>
+
+              {% if bauantrag.status == "erstellt" %}
+                   <input type="submit" value="Einreichen" class="btn btn-success">
+          {% endif %}
+          </form>
+
+         </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
+{% endblock %}

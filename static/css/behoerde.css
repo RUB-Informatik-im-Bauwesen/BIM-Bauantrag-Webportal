@@ -1,0 +1,13 @@
+.tile-li{
+    list-style: none;
+    float: left;
+    width:100px;
+    height: 100px;
+    background-color: #17365c;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top:5px;
+}

@@ -1,0 +1,129 @@
+<form action="{{url_for('behoerde.formellePruefungAbschicken')}}" method="post">
+
+          <input type="hidden" name="vorgaengerNachrichtId" value="{{bauantrag.id}}">
+
+          <h4>Formelle Prüfung</h4>
+          <div class="well">
+
+              {% set value='' %}
+              {% set checked='' %}
+              {% if formellePruefung.befundBeteiligte %}
+                  {% set value= formellePruefung.befundBeteiligte %}
+                  {% set checked= 'checked' %}
+              {% endif %}
+
+              <div class="form-group">
+                  <div class="checkbox">
+                      <label>
+                          <input id="toggleBeteiligte" name="toggleBeteiligte" type="checkbox" value=1 data-toggle="toggle"
+                                 data-on="Ja" data-off="Nein" data-onstyle="danger" data-offstyle="success" {{ checked }}>
+                          Angaben zu den Beteiligten fehlerhaft oder unvollständig
+                      </label>
+                  </div>
+                  <textarea id="textareaBeteiligte" name="textareaBeteiligte" class="form-control" rows="2">{{ value }}</textarea>
+              </div>
+
+              {% set value='' %}
+              {% set checked='' %}
+              {% if formellePruefung.befundBauvorhaben %}
+                  {% set value= formellePruefung.befundBauvorhaben %}
+                  {% set checked= 'checked' %}
+              {% endif %}
+              <div class="form-group">
+              <div class="checkbox">
+                  <label>
+                    <input id="toggleBauvorhaben" name="toggleBauvorhaben"  type="checkbox" value=2 data-toggle="toggle"
+                           data-on="Ja" data-off="Nein" data-onstyle="danger" data-offstyle="success" {{ checked }}>
+                    Angaben zum Bauvorhaben fehlerhaft oder unvollständig
+                  </label>
+               </div>
+              <textarea id="textareaBauvorhaben" name="textareaBauvorhaben" class="form-control" rows="2" >{{ value }}</textarea>
+              </div>
+
+              {% set value='' %}
+              {% set checked='' %}
+              {% if formellePruefung.befundLokalisierung %}
+                  {% set value= formellePruefung.befundLokalisierung %}
+                  {% set checked= 'checked' %}
+              {% endif %}
+              <div class="form-group">
+              <div class="checkbox">
+                  <label>
+                    <input id="toggleLokalisierung" name="toggleLokalisierung" type="checkbox" value=3 data-toggle="toggle"
+                           data-on="Ja" data-off="Nein" data-onstyle="danger" data-offstyle="success" {{ checked }}>
+                    Angaben zur Lokalisierung fehlerhaft oder unvollständig
+                  </label>
+              </div>
+              <textarea id="textareaLokalisierung" name="textareaLokalisierung" class="form-control" rows="2">{{ value }}</textarea>
+              </div>
+
+              {% set value='' %}
+              {% set checked='' %}
+              {% if formellePruefung.befundAnlageMangel %}
+                  {% set value= formellePruefung.befundAnlageMangel %}
+                  {% set checked= 'checked' %}
+              {% endif %}
+              <div class="form-group">
+              <div class="checkbox">
+                  <label>
+                    <input id="toggleAnlageMangel" name="toggleAnlageMangel" type="checkbox" value=4 data-toggle="toggle"
+                           data-on="Ja" data-off="Nein" data-onstyle="danger" data-offstyle="success" {{ checked }}>
+                    Eingereichte Bauvorlage oder sonstige Anlage hat Mängel
+                  </label>
+              </div>
+              <textarea id="textareaAnlageMangel" name="textareaAnlageMangel" class="form-control" rows="2">{{ value }}</textarea>
+              </div>
+
+              {% set value='' %}
+              {% set checked='' %}
+              {% if formellePruefung.befundAnlageFehlt %}
+                  {% set value= formellePruefung.befundAnlageFehlt %}
+                  {% set checked= 'checked' %}
+              {% endif %}
+              <div class="form-group">
+              <div class="checkbox">
+                  <label>
+                    <input id="toggleAnlageFehlt" name="toggleAnlageFehlt" type="checkbox" value=5 data-toggle="toggle"
+                           data-on="Ja" data-off="Nein" data-onstyle="danger" data-offstyle="success" {{ checked }}>
+                    Bauvorlage oder sonstige Anlage fehlt
+                  </label>
+              </div>
+              <textarea id="textareaAnlageFehlt" name="textareaAnlageFehlt" class="form-control" rows="2">{{ value }}</textarea>
+              </div>
+
+              {% set value='' %}
+              {% set checked='' %}
+              {% if formellePruefung.befundAbweichung %}
+                  {% set value= formellePruefung.befundAbweichung %}
+                  {% set checked= 'checked' %}
+              {% endif %}
+              <div class="form-group">
+              <div class="checkbox">
+                  <label>
+                    <input id="toggleAbweichung" name="toggleAbweichung" type="checkbox" value=6 data-toggle="toggle"
+                           data-on="Ja" data-off="Nein" data-onstyle="danger" data-offstyle="success" {{ checked }}>
+                    Abweichungsantrag fehlt
+                  </label>
+              </div>
+              <textarea id="textareaAbweichung" name="textareaAbweichung" class="form-control" rows="2">{{ value }}</textarea>
+              </div>
+
+              {% set value='' %}
+              {% if formellePruefung.frist %}
+                  {% set value= formellePruefung.frist %}
+              {% endif %}
+              <div class="form-group">
+                  <label class="control-label" for="frist">Frist</label>
+                  <input class="form-control" id="frist" name="frist" placeholder="MM/DD/YYY" type="date" value="{{ value }}"/>
+              </div>
+
+              <div class="form-group">
+               <input type="submit" value="Speichern" class="btn btn-primary">
+              </div>
+
+
+
+
+
+          </div>
+</form>
